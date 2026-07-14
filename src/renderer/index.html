@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https:; connect-src 'self' https://discord.com;">
+  <title>Deep Track — Deep Work Studio</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="./fonts/inter.css" rel="stylesheet">
+  <link href="./fonts/material-icons.css" rel="stylesheet">
+  <script src="../../node_modules/chart.js/dist/chart.umd.js"></script>
+</head>
+
+<body>
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="loading-content">
+      <div class="loading-logo">
+        <div class="pulse-ring"></div>
+        <div class="logo-inner">
+          <img src="../../assets/logo image 2.ico" alt="Deep Track Logo" class="official-logo">
+        </div>
+      </div>
+      <h2 class="loading-text">Deep Track</h2>
+      <p class="loading-subtext">Initializing Neural Workspace...</p>
+    </div>
+  </div>
+
+
+  <!-- Dedicated Break Overlay -->
+  <div id="break-overlay" tabindex="-1">
+    <div class="break-content">
+      <h1>TAKE A BREAK</h1>
+      <div id="break-timer-display">00:00</div>
+      <p class="break-hint">Press S to dismiss</p>
+
+      <!-- Break Media Player -->
+      <div class="break-media-player glass-panel">
+        <div class="break-media-info">
+          <div class="break-media-art">
+            <span class="material-icons-outlined">music_note</span>
+          </div>
+          <div class="break-media-meta">
+            <span id="break-track-name" class="break-track-title">Loading zen music...</span>
+            <span id="break-track-desc" class="break-track-desc">Zen Rest Cycle</span>
+          </div>
+        </div>
+        <div class="break-media-controls">
+          <span class="material-icons-outlined break-ctrl-btn" id="break-prev-track">skip_previous</span>
+          <div class="break-play-btn" id="break-media-play">
+            <span class="material-icons-outlined">pause</span>
+          </div>
+          <span class="material-icons-outlined break-ctrl-btn" id="break-next-track">skip_next</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- App Shell -->
+  <div class="app-shell" id="app-shell">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <img src="../../assets/logo image 2.ico" alt="Logo" class="sidebar-logo">
+        <div>
+          <span class="brand-name">DEEP TRACK</span>
+          <span class="brand-version">V 1.2.3</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">CORE</div>
+        <button class="sidebar-btn active" data-view="dash-view">
+          <span class="material-icons-outlined">dashboard</span>
+
+          <span>Dashboard</span>
+        </button>
+        <button class="sidebar-btn" data-view="setup-view">
+          <span class="material-icons-outlined">alarm</span>
+          <span>Focus Studio</span>
+        </button>
+        <button class="sidebar-btn" data-view="strict-view">
+          <span class="material-icons-outlined">lock_clock</span>
+          <span>Strict Session</span>
+        </button>
+        <button class="sidebar-btn" data-view="analytics-view">
+          <span class="material-icons-outlined">account_tree</span>
+          <span>Analytics</span>
+        </button>
+
+        <div class="nav-section-label">WORKSPACE</div>
+        <button class="sidebar-btn" data-view="history-view">
+          <span class="material-icons-outlined">history</span>
+          <span>History</span>
+        </button>
+        <button class="sidebar-btn" data-view="zen-view">
+          <span class="material-icons-outlined">edit_note</span>
+          <span>Zen Notes</span>
+        </button>
+        <button class="sidebar-btn" data-view="flowstate-view" style="display: none;">
+          <span class="material-icons-outlined">psychology</span>
+          <span>Flow State</span>
+        </button>
+        <button class="sidebar-btn" data-view="lab-view" style="display: none;">
+          <span class="material-icons-outlined">science</span>
+          <span>Lab</span>
+        </button>
+
+        <div class="nav-section-label">SYSTEM</div>
+        <button class="sidebar-btn" data-view="settings-view">
+          <span class="material-icons-outlined">settings</span>
+          <span>Settings</span>
+        </button>
+        <button class="sidebar-btn" data-view="support-view">
+          <span class="material-icons-outlined">help</span>
+          <span>Support</span>
+        </button>
+      </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content" id="main-content">
+
+      <!-- ═══════════ DASHBOARD VIEW ═══════════ -->
+      <div id="dash-view" class="view active">
+        <div class="view-header">
+          <div>
+            <h1 id="greeting-text">Good evening</h1>
+            <p class="view-subtitle" id="greeting-sub">You've completed <span id="dash-completion">0%</span> of your
+              deep work targets for today.</p>
+          </div>
+        </div>
+
+        <div class="stat-cards-row">
+          <div class="stat-card accent" data-tooltip="The total accumulated time you've spent in active, high-intensity deep focus sessions today." data-tooltip-title="Focus Time">
+            <span class="stat-label">Focus Time</span>
+            <span class="stat-value" id="stat-today-time">0h 0m</span>
+          </div>
+          <div class="stat-card" data-tooltip="The number of completed focus blocks. Tracks your daily productivity milestones." data-tooltip-title="Completed Cycles">
+            <span class="stat-label">Completed Cycles</span>
+            <span class="stat-value" id="stat-cycles">0</span>
+          </div>
+          <div class="stat-card" data-tooltip="A percentage reflecting how closely your actual focus duration matched your planned targets." data-tooltip-title="Focus Accuracy">
+            <span class="stat-label">Focus Accuracy</span>
+            <span class="stat-value" id="stat-accuracy">0%</span>
+          </div>
+          <div class="stat-card" data-tooltip="The total number of distracting websites and applications prevented by strict protocols today." data-tooltip-title="Blocked Distractions">
+            <span class="stat-label">Blocked</span>
+            <span class="stat-value" id="stat-blocked">0</span>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="glass-card chart-card-large">
+            <div class="card-header">
+              <h3 data-tooltip="Timeline comparing your active deep focus time against general screen usage." data-tooltip-title="Focus Time Over Time">Focus Time Over Time</h3>
+              <div class="chart-toggle">
+                <button class="toggle-btn active" data-chart-type="focus">Focus</button>
+                <button class="toggle-btn" data-chart-type="screentime">Screen Time</button>
+              </div>
+            </div>
+            <canvas id="focusTrendChart"></canvas>
+          </div>
+          <div class="glass-card">
+            <h3 data-tooltip="AI-generated recommendations detailing your peak focus patterns throughout the day." data-tooltip-title="Productivity Trends">Productivity Trends</h3>
+            <p class="insight-text" id="productivity-insight">"You are most productive between 10 AM and 12 PM. Try
+              scheduling your hardest tasks then."</p>
+            <div class="mini-stat-row">
+              <div class="mini-stat">
+                <span class="mini-label">Screen Time</span>
+                <span class="mini-value" id="stat-today-screen-time">0h 0m</span>
+              </div>
+              <div class="mini-stat">
+                <span class="mini-label">Focus Time</span>
+                <span class="mini-value" id="stat-focus-score">0h 0m</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="glass-card">
+            <h3 data-tooltip="Your progress bar towards today's target deep work goals. Keeps you accountable!" data-tooltip-title="Daily Goal Progress">Daily Goal Progress</h3>
+            <div class="progress-bar-container">
+              <div class="progress-bar-fill" id="daily-progress-fill" style="width: 0%"></div>
+            </div>
+            <p class="progress-hint" id="daily-progress-text">Set a focus session to begin tracking</p>
+
+            <div class="target-divider"></div>
+
+            <div class="target-config-section">
+              <div class="target-header-row">
+                <span class="target-section-title">DAILY FOCUS TARGET</span>
+                <span class="target-display-value"><span id="target-hours-val">6</span>h</span>
+              </div>
+
+              <div class="preset-row">
+                <button type="button" class="preset-btn" data-hours="2">2h <span class="preset-desc">Casual</span></button>
+                <button type="button" class="preset-btn" data-hours="4">4h <span class="preset-desc">Balanced</span></button>
+                <button type="button" class="preset-btn active" data-hours="6">6h <span class="preset-desc">Deep</span></button>
+                <button type="button" class="preset-btn" data-hours="8">8h <span class="preset-desc">Hardcore</span></button>
+              </div>
+
+              <div class="slider-container">
+                <span class="slider-limit">1h</span>
+                <input type="range" id="target-range-slider" min="1" max="12" step="0.5" value="6" class="premium-slider">
+                <span class="slider-limit">12h</span>
+              </div>
+
+              <button type="button" id="lock-target-btn" class="lock-btn" data-tooltip="Locks your focus target slider until midnight to enforce daily work goals." data-tooltip-title="Lock Goal Target">
+                <span class="material-icons-outlined">lock</span>
+                <span>Lock Target</span>
+              </button>
+            </div>
+          </div>
+          <div class="glass-card">
+            <h3 data-tooltip="A real-time visual breakdown of your most heavily used computer applications." data-tooltip-title="Screen Time Distribution">Screen Time Distribution</h3>
+            <canvas id="appUsageChart"></canvas>
+            <div id="app-usage-list" class="usage-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ FOCUS STUDIO VIEW ═══════════ -->
+      <div id="setup-view" class="view">
+        <div class="view-header">
+          <div>
+            <h1><span class="material-icons-outlined view-icon">auto_awesome</span> Initialize Focus Studio</h1>
+            <p class="view-subtitle">Configure your cognitive environment. Select a protocol to begin your deep work
+              journey.</p>
+          </div>
+        </div>
+
+        <div class="protocol-cards">
+          <div class="protocol-card" id="protocol-standard" data-tooltip="Standard protocol for balanced deep focus sessions. Perfect for general research, coding, or structural planning." data-tooltip-title="Standard Protocol">
+            <div class="protocol-icon-wrap"><span class="material-icons-outlined">timer</span></div>
+            <h3>Enter the Studio</h3>
+            <p>Configurable flow for balanced productivity. Optimized for creative tasks and long-form coding.</p>
+          </div>
+          <div class="protocol-card strict-protocol" id="protocol-strict-shortcut" data-tooltip="Lockdown mode that blocks all notifications, prevents escaping, and redirects distracting study links." data-tooltip-title="Strict Protocol">
+            <div class="protocol-icon-wrap strict"><span class="material-icons-outlined">lock</span></div>
+            <h3>Deploy Protocol</h3>
+            <p>Full lockdown mode for maximum intensity. Blocks all notifications and redirects time-wasting domains.
+            </p>
+          </div>
+        </div>
+
+        <div class="glass-card session-config" id="standard-config" data-tooltip="Configure custom focus intervals, objectives, and dynamic chime notifications here." data-tooltip-title="Session Parameters">
+          <h3>Session Parameters</h3>
+          <p class="config-subtitle">Fine-tune your cognitive load.</p>
+          <div class="setup-grid">
+            <div class="input-group">
+              <label>Focus (min)</label>
+              <input type="number" id="focus-input" value="25" min="1">
+            </div>
+            <div class="input-group">
+              <label>Break (min)</label>
+              <input type="number" id="break-input" value="5" min="1">
+            </div>
+            <div class="input-group full-width">
+              <label>Main Objective</label>
+              <input type="text" id="task-input" placeholder="e.g., General Work">
+            </div>
+            <div class="input-group">
+              <label>Estimated Cycles(Optional)</label>
+              <input type="number" id="est-cycles-input" value="0" min="0" placeholder="0 for infinite">
+            </div>
+            <div class="input-group">
+              <label>Notification Mode</label>
+              <div class="segmented-control">
+                <input type="radio" name="notification" value="blackout" id="notif-blackout" checked>
+                <label for="notif-blackout" class="segmented-btn">
+                  <span class="material-icons-outlined">layers</span>
+                  <span>Blackout</span>
+                </label>
+
+                <input type="radio" name="notification" value="audio" id="notif-audio">
+                <label for="notif-audio" class="segmented-btn">
+                  <span class="material-icons-outlined">notifications_active</span>
+                  <span>Ambient Chime</span>
+                </label>
+                <span class="segmented-slider"></span>
+              </div>
+            </div>
+          </div>
+          <button id="start-btn" class="primary-btn">Begin Session</button>
+        </div>
+
+        <div class="sidebar-stats-row">
+          <div class="glass-card mini-info" data-tooltip="Consecutive days with at least one focus cycle completed to maintain productivity momentum." data-tooltip-title="Current Streak">
+            <span class="mini-info-label">CURRENT STREAK</span>
+            <span class="mini-info-value" id="streak-days">0 DAYS</span>
+          </div>
+          <div class="glass-card mini-info" data-tooltip="The total focus time accumulated in structured deep sessions across your entire history." data-tooltip-title="Total Deep Work">
+            <span class="mini-info-label">TOTAL DEEP WORK</span>
+            <span class="mini-info-value" id="total-deep-work">0 HRS</span>
+          </div>
+          <div class="glass-card mini-info" data-tooltip="Average concentration score reflecting how well your focus targets match your actual cycles." data-tooltip-title="Avg Focus Score">
+            <span class="mini-info-label">AVG FOCUS SCORE</span>
+            <span class="mini-info-value" id="avg-focus-score">0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ STRICT SESSION VIEW ═══════════ -->
+      <div id="strict-view" class="view">
+        <div class="view-header">
+          <div>
+            <h1 class="strict-title"><span class="material-icons-outlined view-icon">lock</span> Strict Session
+              Configuration</h1>
+            <p class="view-subtitle">Protocol Deployment</p>
+          </div>
+        </div>
+
+        <div class="glass-card strict-config" data-tooltip="Deploy an inescapable focus protocol. Once activated, target timers cannot be bypassed." data-tooltip-title="Strict Lockdown Protocol">
+          <div class="setup-grid">
+            <div class="input-group">
+              <label>Focus Duration</label>
+              <input type="number" id="strict-focus-input" value="45" min="1">
+              <span class="input-hint">Min required for Strict Mode</span>
+            </div>
+            <div class="input-group">
+              <label>Break Time</label>
+              <input type="number" id="strict-break-input" value="10" min="1">
+              <span class="input-hint">Protocol standard break</span>
+            </div>
+            <div class="input-group">
+              <label>Estimated Cycles</label>
+              <input type="number" id="strict-est-cycles-input" value="0" min="0" placeholder="0 for infinite">
+            </div>
+            <div class="input-group">
+              <label>Main Objective</label>
+              <input type="text" id="strict-task-input" placeholder="e.g., Deep Coding Session">
+            </div>
+          </div>
+
+          <div class="strict-toggles">
+            <div class="strict-toggle-item" data-tooltip="Automatically locks the application into fullscreen mode. Minimizing is disabled." data-tooltip-title="Fullscreen Enforced">
+              <span class="material-icons-outlined toggle-icon active-icon">fullscreen</span>
+              <div>
+                <strong>Fullscreen Enforced</strong>
+                <p>Minimize ability is disabled until timer expires.</p>
+              </div>
+            </div>
+            <div class="strict-toggle-item" data-tooltip="Locks standard workspace escape triggers and keeps focus strictly within the browser." data-tooltip-title="No Escape Mode">
+              <span class="material-icons-outlined toggle-icon active-icon">block</span>
+              <div>
+                <strong>No Escape Mode</strong>
+                <p>Keyboard shortcuts (Alt-Tab/Cmd-Tab) restricted.</p>
+              </div>
+            </div>
+            <div class="strict-toggle-item" data-tooltip="Enforces a rigid DNS-level study zone, blocking distracting web shelf dynamic recommendations." data-tooltip-title="Ad-Block Strict">
+              <span class="material-icons-outlined toggle-icon active-icon">shield</span>
+              <div>
+                <strong>Ad-Block Strict</strong>
+                <p>Deep DNS filtering for distraction-free zone.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="input-group full-width">
+            <label>Video / Study Link (Optional)</label>
+            <input type="url" id="strict-url-input" placeholder="youtube.com/watch?v=...">
+            <span class="input-hint">This is the only domain permitted during the session.</span>
+          </div>
+
+          <div class="strict-warning">
+            <span class="material-icons-outlined">warning</span>
+            <div>
+              <strong>CRITICAL PROTOCOL WARNING</strong>
+              <p>Entering Protocol will lock this device until the objective is complete. Force shutdown may lead to
+                session failure and loss of focus streaks.</p>
+            </div>
+          </div>
+
+          <button id="start-strict-btn" class="primary-btn strict-btn">Activate Strict Protocol</button>
+        </div>
+      </div>
+
+      <!-- ═══════════ ANALYTICS VIEW ═══════════ -->
+      <div id="analytics-view" class="view">
+        <div class="view-header">
+          <div>
+            <h1>Analytics</h1>
+            <p class="view-subtitle">Command Center / Detailed Metrics</p>
+          </div>
+        </div>
+
+        <div class="stat-cards-row four-col">
+          <div class="stat-card accent" data-tooltip="Total accumulated focus hours across all logged deep work cycles." data-tooltip-title="Total Focus Time">
+            <span class="stat-label">Total Focus Time</span>
+            <span class="stat-value" id="analytics-total-focus">0h 0m</span>
+          </div>
+          <div class="stat-card" data-tooltip="The proportion of active deep focus sessions compared to general computer screen time today." data-tooltip-title="Deep Work Ratio">
+            <span class="stat-label">Deep Work Ratio</span>
+            <span class="stat-value" id="analytics-ratio">0%</span>
+          </div>
+          <div class="stat-card" data-tooltip="Total list of tasks and structural session goals checked off successfully." data-tooltip-title="Tasks Completed">
+            <span class="stat-label">Tasks Completed</span>
+            <span class="stat-value" id="analytics-tasks">0</span>
+          </div>
+          <div class="stat-card" data-tooltip="Your average focus score out of 100 based on target estimation performance." data-tooltip-title="Avg. Focus Score">
+            <span class="stat-label">Avg. Focus Score</span>
+            <span class="stat-value" id="analytics-avg-score">0/100</span>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="glass-card chart-card-large">
+            <div class="card-header">
+              <h3 id="analytics-chart-title" data-tooltip="Interactive trend chart showing focus hours or screen time over daily, weekly, or monthly periods." data-tooltip-title="Analytics Chart">Focus Time Over Time</h3>
+              <div class="chart-toggle">
+                <button class="toggle-btn active analytics-type-btn" data-chart-type="focus">Focus</button>
+                <button class="toggle-btn analytics-type-btn" data-chart-type="screentime">Screen
+                  Time</button>
+              </div>
+            </div>
+            <div style="display: flex; gap: 8px; margin-bottom: 15px;">
+              <button class="toggle-btn active analytics-range-btn" data-range-days="1">1D</button>
+              <button class="toggle-btn analytics-range-btn" data-range-days="7">7D</button>
+              <button class="toggle-btn analytics-range-btn" data-range-days="30">30D</button>
+            </div>
+            <canvas id="analyticsFocusChart"></canvas>
+          </div>
+          <div class="glass-card">
+            <h3 data-tooltip="Pill tracker demonstrating daily focus time concentration peaks over the past 4 weeks." data-tooltip-title="Activity Heatmap">Activity Heatmap</h3>
+            <p class="insight-text">Concentration peaks throughout the week</p>
+            <div class="heatmap-placeholder">
+              <div class="heatmap-row" id="heatmap-grid"></div>
+            </div>
+            <div class="heatmap-footer">
+              <div class="heatmap-inspector" id="heatmap-inspector">Click a cell to inspect daily focus logs</div>
+              <div class="heatmap-legend">
+                <span>Less</span>
+                <div class="legend-cells">
+                  <div class="legend-cell" data-tier="0" title="Rest Day"></div>
+                  <div class="legend-cell" data-tier="1" title="Light Focus (<1h)"></div>
+                  <div class="legend-cell" data-tier="2" title="Medium Focus (1h-3h)"></div>
+                  <div class="legend-cell" data-tier="3" title="Heavy Focus (3h-5h)"></div>
+                  <div class="legend-cell" data-tier="4" title="Peak Focus (>=5h)"></div>
+                </div>
+                <span>More</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <h3 data-tooltip="Deeper statistical insights breaking down focus streak details and record achievements." data-tooltip-title="Sessions Breakdown">Sessions Breakdown</h3>
+          <div class="breakdown-stats">
+            <div class="breakdown-item" data-tooltip="The day on which you recorded your highest daily focus duration." data-tooltip-title="Best Focus Day">
+              <span class="breakdown-label">Best Focus Day</span>
+              <span class="breakdown-value" id="best-focus-day">—</span>
+            </div>
+            <div class="breakdown-item" data-tooltip="Your all-time record for consecutive active daily focus cycles." data-tooltip-title="Longest Streak">
+              <span class="breakdown-label">Longest Streak</span>
+              <span class="breakdown-value" id="longest-streak">0 Days</span>
+            </div>
+            <div class="breakdown-item" data-tooltip="Your average focus duration achieved per day across all active tracking days." data-tooltip-title="Avg. Daily Focus">
+              <span class="breakdown-label">Avg. Daily Focus</span>
+              <span class="breakdown-value" id="avg-daily-focus">0h 0m</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card" data-tooltip="Your baseline average screen time computed daily across the entire tracking range." data-tooltip-title="Avg Daily Screen Time">
+          <h3>Avg Daily Screen Time</h3>
+          <span class="stat-value" id="stat-avg-screen-time">0h 0m</span>
+        </div>
+      </div>
+
+      <!-- ═══════════ HISTORY VIEW ═══════════ -->
+      <div id="history-view" class="view">
+        <div class="view-header">
+          <h1>Sessions History</h1>
+        </div>
+
+        <div class="glass-card" data-tooltip="Chronological timeline charting your focus hours over time for visual comparison." data-tooltip-title="Focus History Chart">
+          <h3><span class="material-icons-outlined">show_chart</span> Focus Time Over Time</h3>
+          <canvas id="historyFocusChart"></canvas>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="glass-card">
+            <h3 data-tooltip="Detailed grid showing daily computer usage over the last 10 days, scrollable with sticky headers." data-tooltip-title="Daily Screen Time">Daily Screen Time</h3>
+            <div class="history-table-container">
+              <table id="daily-screentime-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Total Screen Time</th>
+                    <th>Top App</th>
+                    <th>App Usage Count</th>
+                  </tr>
+                </thead>
+                <tbody id="daily-screentime-body"></tbody>
+              </table>
+            </div>
+          </div>
+          <div class="glass-card">
+            <h3 data-tooltip="Doughnut breakdown displaying the top applications responsible for your screen time." data-tooltip-title="Top Apps">Top Apps</h3>
+            <canvas id="historyAppChart"></canvas>
+            <div id="history-app-list" class="usage-list"></div>
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <h3 data-tooltip="Database database logs detailing the targets, actual cycles, and focus scores of your last 10 sessions." data-tooltip-title="Recent Sessions">Recent Sessions</h3>
+          <div class="history-table-container">
+            <table id="history-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Task</th>
+                  <th>Cycles</th>
+                  <th>Accuracy</th>
+                </tr>
+              </thead>
+              <tbody id="history-body"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="glass-card" data-tooltip="A historical collection of reflection journal comments and notes typed during previous sessions." data-tooltip-title="Session Notes">
+          <h3>Session Notes</h3>
+          <p class="session-notes-text" id="session-notes-text">Complete a focus session to see notes here.</p>
+        </div>
+      </div>
+
+      <!-- ═══════════ ZEN NOTES VIEW ═══════════ -->
+      <div id="zen-view" class="view">
+        <div class="view-header">
+          <h1><span class="material-icons-outlined view-icon">edit_note</span> Zen Notes & Journal</h1>
+          <p class="view-subtitle">Capture your thoughts and maintain your flow.</p>
+        </div>
+
+        <div class="zen-layout">
+          <div class="journal-section">
+            <div class="glass-card note-creator" data-tooltip="Draft minimalist entries, toggle fonts dynamically, pick custom background card colors, and save your notes." data-tooltip-title="Mindful Note Creator">
+              <input type="text" id="note-title" placeholder="What's on your mind?" class="note-title-input">
+              <div class="formatting-toolbar">
+                <button type="button" class="format-btn" data-command="bold" title="Bold">
+                  <span class="material-icons-outlined">format_bold</span>
+                </button>
+                <button type="button" class="format-btn" data-command="italic" title="Italic">
+                  <span class="material-icons-outlined">format_italic</span>
+                </button>
+                <button type="button" class="format-btn" data-command="underline" title="Underline">
+                  <span class="material-icons-outlined">format_underlined</span>
+                </button>
+                <div class="toolbar-separator"></div>
+                <button type="button" class="format-btn" data-command="undo" title="Undo">
+                  <span class="material-icons-outlined">undo</span>
+                </button>
+                <button type="button" class="format-btn" data-command="redo" title="Redo">
+                  <span class="material-icons-outlined">redo</span>
+                </button>
+              </div>
+              <div id="note-input" contenteditable="true" class="note-content-editor"
+                data-placeholder="Start journaling..."></div>
+              <div class="note-actions">
+                <div class="color-picker">
+                  <div class="color-dot active" data-color="transparent"
+                    style="background: transparent; border: 1px solid var(--border-color);"></div>
+                  <div class="color-dot" data-color="#f59e0b" style="background: #f59e0b;"></div>
+                  <div class="color-dot" data-color="#10b981" style="background: #10b981;"></div>
+                  <div class="color-dot" data-color="#3b82f6" style="background: #3b82f6;"></div>
+                  <div class="color-dot" data-color="#ef4444" style="background: #ef4444;"></div>
+                </div>
+                <button id="save-note-btn" class="primary-btn small">Save Entry</button>
+              </div>
+            </div>
+            <div id="notes-grid" class="notes-grid"></div>
+          </div>
+
+          <div class="zen-tasks-section glass-card" data-tooltip="Mindful flow micro-checklist. Add and cross off daily subtasks to keep focused." data-tooltip-title="Primary Checklist">
+            <h3>Primary Tasks</h3>
+            <div class="task-input-group">
+              <input type="text" id="zen-task-input" placeholder="+ Add a task">
+            </div>
+            <ul id="zen-task-list" class="zen-task-list"></ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════ FLOW STATE VIEW (Under Construction) ═══════════ -->
+      <div id="flowstate-view" class="view">
+        <div class="under-construction">
+          <span class="material-icons-outlined uc-icon">construction</span>
+          <h2>Flow State</h2>
+          <p>Zen Mode Audio & generative soundscapes are under construction.</p>
+          <span class="uc-badge">COMING SOON</span>
+        </div>
+      </div>
+
+      <!-- ═══════════ LAB VIEW (Under Construction) ═══════════ -->
+      <div id="lab-view" class="view">
+        <div class="under-construction">
+          <span class="material-icons-outlined uc-icon">science</span>
+          <h2>Lab</h2>
+          <p>Experimental features and productivity research tools are under construction.</p>
+          <span class="uc-badge">COMING SOON</span>
+        </div>
+      </div>
+
+        <div id="settings-view" class="view">
+          <div class="view-header">
+            <div>
+              <h1>Settings</h1>
+              <p class="view-subtitle">Configure application behavior and preferences.</p>
+            </div>
+          </div>
+
+          <div class="settings-unified-card">
+            <div class="settings-scroll-area">
+              
+              <!-- GENERAL SETTINGS SECTION -->
+              <div class="settings-block">
+                <h3>General Preferences</h3>
+                <div class="settings-group">
+                  <div class="settings-row">
+                    <div class="settings-info">
+                      <h4>Launch on Startup</h4>
+                      <p>Start Deep Track minimized in the system tray when OS boots.</p>
+                    </div>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="setting-launchOnStartup">
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+
+                  <div class="settings-row">
+                    <div class="settings-info">
+                      <h4>Minimize to Tray on Close</h4>
+                      <p>Hide window to system tray when closing instead of quitting.</p>
+                    </div>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="setting-closeToTray">
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+
+
+                  <div class="settings-row">
+                    <div class="settings-info">
+                      <h4>Clock Format</h4>
+                      <p>Toggle between 12-hour and 24-hour time display.</p>
+                    </div>
+                    <select id="setting-timeFormat" class="premium-input select-input">
+                      <option value="12h">12-Hour (AM/PM)</option>
+                      <option value="24h">24-Hour</option>
+                    </select>
+                  </div>
+
+                  <div class="settings-row">
+                    <div class="settings-info">
+                      <h4>Default Daily Target</h4>
+                      <p>Set your daily focus goal to track completion and maintain focus streaks.</p>
+                    </div>
+                    <div class="premium-stepper" id="stepper-defaultTarget">
+                      <button class="stepper-btn dec" type="button">−</button>
+                      <div class="stepper-input-wrapper">
+                        <span class="stepper-display-value">4.0 hrs</span>
+                        <input type="hidden" id="setting-defaultTarget" value="240">
+                      </div>
+                      <button class="stepper-btn inc" type="button">+</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- FOCUS & AUDIO SECTION -->
+              <div class="settings-block">
+                <h3>Focus & Audio Configuration</h3>
+                <div class="settings-group">
+                  <div class="settings-row">
+                    <div class="settings-info">
+                      <h4>Default Break Duration</h4>
+                      <p>Set your standard recovery interval length between consecutive focus sessions.</p>
+                    </div>
+                    <div class="premium-stepper" id="stepper-breakDuration">
+                      <button class="stepper-btn dec" type="button">−</button>
+                      <div class="stepper-input-wrapper">
+                        <span class="stepper-display-value">5 mins</span>
+                        <input type="hidden" id="setting-breakDuration" value="5">
+                      </div>
+                      <button class="stepper-btn inc" type="button">+</button>
+                    </div>
+                  </div>
+
+                  <div class="settings-row">
+                    <div class="settings-info">
+                      <h4>Session Chime Style</h4>
+                      <p>Select auditory feedback for session completion.</p>
+                    </div>
+                    <select id="setting-chimeStyle" class="premium-input select-input">
+                      <option value="arpeggio">Synthesized Arpeggio</option>
+                      <option value="bell">Minimal Bell</option>
+                      <option value="silent">Silent / Muted</option>
+                    </select>
+                  </div>
+
+                  <div class="settings-row">
+                    <div class="settings-info">
+                      <h4>Ticking Clock</h4>
+                      <p>Play a subtle tick during the final 60 seconds to trigger urgency.</p>
+                    </div>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="setting-timerTick">
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+
+                  <div class="settings-row">
+                    <div class="settings-info">
+                      <h4>Floating Session Controls</h4>
+                      <p>Display a mini floating control bubble on your desktop during active sessions.</p>
+                    </div>
+                    <label class="toggle-switch">
+                      <input type="checkbox" id="setting-showOverlayDuringSession">
+                      <span class="toggle-slider"></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- DATA MANAGEMENT SECTION -->
+              <div class="settings-block">
+                <h3>Data Management</h3>
+                <div class="settings-group">
+                  <div class="settings-row">
+                    <div class="settings-info">
+                      <h4>Export Data</h4>
+                      <p>Download your session history, analytics, and Zen notes as JSON.</p>
+                    </div>
+                    <button id="settings-export-btn" class="secondary-btn">
+                      <span class="material-icons-outlined">backup</span>Export Backup
+                    </button>
+                  </div>
+
+                  <div class="settings-row danger-zone">
+                    <div class="settings-info">
+                      <h4 class="danger-text">Factory Reset</h4>
+                      <p>Wipe all local data and revert to default application state.</p>
+                    </div>
+                    <button id="settings-reset-btn" class="danger-btn">
+                      <span class="material-icons-outlined">delete_forever</span>Wipe Data
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Sticky Footer Actions -->
+            <div class="settings-footer">
+              <span id="settings-save-indicator" class="save-indicator">Changes Saved!</span>
+              <button id="settings-cancel-btn" class="secondary-btn">
+                <span class="material-icons-outlined">undo</span>Discard
+              </button>
+              <button id="settings-save-btn" class="primary-btn">
+                <span class="material-icons-outlined">save</span>Save Configuration
+              </button>
+            </div>
+          </div>
+        </div>
+
+      <!-- ═══════════ SUPPORT & FEEDBACK VIEW ═══════════ -->
+      <div id="support-view" class="view">
+        <div class="view-header">
+          <div>
+            <h1>Support & Feedback</h1>
+            <p class="view-subtitle">Help shape the future of Deep Track. Report bugs or suggest features.</p>
+          </div>
+        </div>
+
+        <div class="settings-unified-card glass-card">
+          <div class="settings-scroll-area">
+            
+            <!-- FEEDBACK FORM COLUMN -->
+            <div class="settings-block">
+              <h3><span class="material-icons-outlined">campaign</span> Submit Feedback</h3>
+              <div class="settings-group">
+                
+                <div class="settings-row column-layout" style="align-items: flex-start; gap: 12px; border: none; padding-top: 0;">
+                  <div class="settings-info">
+                    <h4>How is your experience?</h4>
+                  </div>
+                  <div class="feedback-rating-row">
+                    <button class="rating-btn" data-rating="1" title="Terrible">😡</button>
+                    <button class="rating-btn" data-rating="2" title="Bad">😕</button>
+                    <button class="rating-btn" data-rating="3" title="Okay">😐</button>
+                    <button class="rating-btn" data-rating="4" title="Good">🙂</button>
+                    <button class="rating-btn active" data-rating="5" title="Amazing">🚀</button>
+                  </div>
+                </div>
+
+                <div class="settings-row column-layout" style="align-items: stretch; border: none;">
+                  <div class="settings-info">
+                    <h4>What's on your mind?</h4>
+                    <p>Describe the bug or feature request in detail.</p>
+                  </div>
+                  <textarea id="feedback-text" class="premium-input text-area" placeholder="I noticed that when I click..." rows="5" style="min-height: 120px;"></textarea>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; margin-top: 8px;">
+                  <button id="submit-feedback-btn" class="primary-btn">
+                    <span class="material-icons-outlined" style="font-size: 18px; margin-right: 6px; vertical-align: middle;">send</span>
+                    Send to Developer
+                  </button>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- DIAGNOSTICS & HELP COLUMN -->
+            <div class="settings-block">
+              <h3><span class="material-icons-outlined">memory</span> Diagnostic Bundle</h3>
+              <div class="settings-group">
+                <p style="font-size: 0.85rem; color: rgba(255,255,255,0.5); line-height: 1.4; margin-bottom: 12px; margin-top: 0;">
+                  The following system metadata will be securely bundled with your report to help us troubleshoot faster. No personal files are included.
+                </p>
+                
+                <div class="diagnostic-card">
+                  <div class="diag-row">
+                    <span class="diag-label">App Version</span>
+                    <span class="diag-value" id="diag-version">v1.2.3 (Alpha)</span>
+                  </div>
+                  <div class="diag-row">
+                    <span class="diag-label">OS Platform</span>
+                    <span class="diag-value" id="diag-os">Windows 10/11</span>
+                  </div>
+                  <div class="diag-row">
+                    <span class="diag-label">Total Sessions</span>
+                    <span class="diag-value" id="diag-sessions">0</span>
+                  </div>
+                  <div class="diag-row">
+                    <span class="diag-label">User ID</span>
+                    <span class="diag-value" id="diag-uid">Not Initialized</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Minimal Timer Bubble -->
+  <div id="timer-view">
+    <div class="bubble-container">
+      <div class="drag-handle" id="drag-handle"><span>⋮⋮</span></div>
+
+      <!-- Media Controls -->
+      <div class="media-controls">
+        <div id="media-metadata" class="media-metadata">Loading media...</div>
+        <div class="media-btns-row">
+          <button id="media-prev-btn" class="media-btn">⏮</button>
+          <button id="media-play-btn" class="media-btn">⏯</button>
+          <button id="media-next-btn" class="media-btn">⏭</button>
+        </div>
+      </div>
+
+      <button id="pause-btn" class="bubble-btn">⏸</button>
+      <button id="checklist-btn" class="action-btn list-btn">📋</button>
+      <button id="stop-btn" class="action-btn exit-btn">✕</button>
+
+      <div id="checklist-popover">
+        <h4>Objective Tasks</h4>
+        <ul id="sub-task-list"></ul>
+        <input type="text" id="new-sub-task" placeholder="+ New sub-task">
+      </div>
+
+      <div id="time-display">25:00</div>
+    </div>
+  </div>
+
+
+
+  <!-- ═══════════ ACTIVE SESSION VIEW (Obsidian Flow) ═══════════ -->
+  <div id="active-session-view" class="view full-screen-view">
+    <!-- Main Content Canvas -->
+    <main class="session-canvas">
+      <!-- Timer Section -->
+      <div class="timer-container">
+        <div class="timer-glow-bg"></div>
+        <div class="timer-circle-wrap">
+          <svg class="timer-svg">
+            <circle cx="240" cy="240" r="220" class="timer-track"></circle>
+            <circle cx="240" cy="240" r="220" id="timer-progress-bar" class="timer-progress"></circle>
+          </svg>
+          <div class="timer-content">
+            <span class="timer-label">TIME REMAINING</span>
+            <span id="session-time-display" class="timer-digits">00:00:00</span>
+            <div class="flow-indicator">
+              <span class="material-icons-outlined">bolt</span>
+              <span id="session-mode-text">DEEP FLOW MODE</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Sidebar Checklist -->
+      <aside id="session-sidebar" class="session-sidebar glass-panel">
+        <div class="sidebar-header">
+          <h3>Focus Checklist</h3>
+          <span id="checklist-count" class="count-badge">0/0</span>
+        </div>
+        <div class="sidebar-progress">
+          <div id="checklist-progress-fill" class="progress-fill"></div>
+        </div>
+
+        <div id="session-task-list" class="session-task-list">
+          <!-- Tasks will be injected here -->
+        </div>
+        <div class="session-task-input-container">
+          <input type="text" id="session-task-input" placeholder="Type a focus task..." class="session-task-input">
+          <button id="add-session-task-btn" class="session-task-add-btn">
+            <span class="material-icons-outlined">add</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- Audio Player Bar -->
+      <div class="audio-player-container">
+        <div class="audio-player glass-panel">
+          <div class="audio-info">
+            <div class="audio-art">
+              <span class="material-icons-outlined">music_note</span>
+            </div>
+            <div class="audio-meta">
+              <span id="current-track-name" class="track-title">Focus Music</span>
+              <span id="current-track-desc" class="track-desc">Ambient Waves • Deep Focus</span>
+            </div>
+          </div>
+          <div class="audio-controls">
+            <span class="material-icons-outlined ctrl-btn" id="prev-track">skip_previous</span>
+            <div class="play-pause-btn" id="session-play-btn">
+              <span class="material-icons-outlined">pause</span>
+            </div>
+            <span class="material-icons-outlined ctrl-btn" id="next-track">skip_next</span>
+          </div>
+          <div class="audio-volume" id="volume-control-wrap">
+            <div class="volume-popover" id="volume-popover">
+              <div class="vertical-slider" id="volume-slider-vertical">
+                <div class="volume-fill-vertical" id="volume-fill-vertical" style="height: 75%"></div>
+              </div>
+              <span class="volume-percent" id="volume-percent-text">75%</span>
+            </div>
+            <span class="material-icons-outlined ctrl-btn" id="volume-icon">volume_up</span>
+
+
+
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Bottom Action Buttons -->
+    <footer class="session-footer">
+      <button id="session-pause-btn" class="footer-btn secondary">
+        <span class="btn-text">Pause Session</span>
+        <span class="btn-subtext">Take a short break</span>
+      </button>
+      <button id="session-stop-btn" class="footer-btn danger">
+        <span class="btn-text">End Session</span>
+        <span class="btn-subtext">End focus and start break</span>
+      </button>
+    </footer>
+  </div>
+
+
+  <!-- Note Modal for viewing/editing content -->
+  <div id="note-modal" class="modal-overlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span id="modal-note-date" class="n-date"></span>
+        <div class="modal-actions">
+          <button id="edit-note-btn" class="secondary-btn small">Edit</button>
+          <button id="close-modal" class="close-btn">&times;</button>
+        </div>
+      </div>
+      <input type="text" id="modal-note-title" class="modal-title-input" readonly>
+      <div class="modal-formatting-toolbar">
+        <button type="button" class="format-btn" data-command="bold" title="Bold">
+          <span class="material-icons-outlined">format_bold</span>
+        </button>
+        <button type="button" class="format-btn" data-command="italic" title="Italic">
+          <span class="material-icons-outlined">format_italic</span>
+        </button>
+        <button type="button" class="format-btn" data-command="underline" title="Underline">
+          <span class="material-icons-outlined">format_underlined</span>
+        </button>
+        <div class="toolbar-separator"></div>
+        <button type="button" class="format-btn" data-command="undo" title="Undo">
+          <span class="material-icons-outlined">undo</span>
+        </button>
+        <button type="button" class="format-btn" data-command="redo" title="Redo">
+          <span class="material-icons-outlined">redo</span>
+        </button>
+      </div>
+      <div id="modal-note-body" class="modal-body" contenteditable="false"></div>
+      <div class="modal-edit-actions" style="display: none;">
+        <div class="color-picker">
+          <div class="color-dot active" data-color="transparent"
+            style="background: transparent; border: 1px solid var(--border-color);"></div>
+          <div class="color-dot" data-color="#f59e0b" style="background: #f59e0b;"></div>
+          <div class="color-dot" data-color="#10b981" style="background: #10b981;"></div>
+          <div class="color-dot" data-color="#3b82f6" style="background: #3b82f6;"></div>
+          <div class="color-dot" data-color="#ef4444" style="background: #ef4444;"></div>
+        </div>
+        <div>
+          <button id="cancel-edit-btn" class="secondary-btn small">Cancel</button>
+          <button id="save-edit-btn" class="primary-btn small">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Goal Accomplished Modal -->
+  <div id="cycle-complete-modal" class="modal-overlay">
+    <div class="modal-content glass-panel notification-card">
+      <div class="notification-icon-wrap">
+        <span class="material-icons-outlined animated-check-icon">emoji_events</span>
+        <div class="glow-ring"></div>
+      </div>
+      <h2 class="notification-title">Goal Accomplished!</h2>
+      <p class="notification-message">Fantastic work! Your planned focus cycles are now complete.</p>
+      
+      <div class="stats-badge-row">
+        <div class="stat-badge">
+          <span class="badge-label">Est. Cycles</span>
+          <span id="notif-est-cycles" class="badge-value">0</span>
+        </div>
+        <div class="stat-badge accent">
+          <span class="badge-label">Actual Cycles</span>
+          <span id="notif-act-cycles" class="badge-value">0</span>
+        </div>
+      </div>
+
+      <button id="close-cycle-modal-btn" class="primary-btn complete-btn">
+        <span class="btn-text">Beautiful. Let's finish!</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Multi-Step Settings Warning Modal -->
+  <div id="settings-warning-modal" class="modal-overlay">
+    <div class="modal-content glass-panel" style="max-width: 480px; text-align: center; padding: 32px 24px;">
+      <div class="warning-icon-wrap" style="width: 64px; height: 64px; border-radius: 50%; background: rgba(168, 85, 247, 0.1); border: 1px solid rgba(168, 85, 247, 0.2); display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; position: relative;">
+        <span class="material-icons-outlined" id="warning-modal-icon" style="font-size: 32px; color: var(--primary);">warning</span>
+        <div class="glow-ring" id="warning-glow-ring" style="border-color: var(--primary);"></div>
+      </div>
+      <h2 class="notification-title" id="warning-modal-title" style="font-size: 1.4rem !important; font-weight: 700 !important; margin-bottom: 12px; line-height: 1.2;">Why this setting is important</h2>
+      <p id="warning-modal-message" style="font-size: 0.85rem; line-height: 1.6; color: var(--on-surface-dim); margin-bottom: 24px; padding: 0 12px;"></p>
+      
+      <div style="display: flex; flex-direction: column; gap: 8px; width: 100%;">
+        <button id="warning-modal-primary-btn" class="primary-btn" style="margin: 0; width: 100%; padding: 10px 20px; font-size: 0.85rem;">Keep Enabled</button>
+        <button id="warning-modal-secondary-btn" class="secondary-btn" style="margin: 0; width: 100%; padding: 10px 20px; font-size: 0.85rem; border-color: rgba(255,255,255,0.06);">Continue</button>
+      </div>
+    </div>
+  </div>
+
+  <webview id="immersive-browser"></webview>
+
+
+  <script src="../../node_modules/dompurify/dist/purify.min.js"></script>
+  <script type="module" src="renderer.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,82 @@
+{
+  "name": "deep-track",
+  "version": "1.2.4",
+  "description": "Deep Track - High-Performance Productivity Engine & Strict Focus Studio",
+  "main": "src/main/main.js",
+  "author": "Deep Track Team",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "start-clean": "electron . --disable-gpu",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "build": {
+    "npmRebuild": false,
+    "appId": "com.deeptrack.app",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Krish-2407",
+        "repo": "Deep-Track"
+      }
+    ],
+    "productName": "Deep Track",
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "icon": "assets/logo image 2.png",
+      "target": [
+        "nsis"
+      ],
+      "verifyUpdateCodeSignature": false
+    },
+    "nsis": {
+      "artifactName": "${productName} Setup ${version}.${ext}",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "include": "build/installer.nsh"
+    },
+    "files": [
+      "**/*",
+      "!dist/**",
+      "!build/**",
+      "!.git/**",
+      "!.planning/**",
+      "!.venv/**",
+      "!scripts/**",
+      "!*.log",
+      "!mcp_config.json",
+      "!stitch_ui.html",
+      "!documentation.md",
+      "!DEVELOPER_DOCUMENTATION.md",
+      "!PRODUCT_OVERVIEW.md",
+      "!*.bak",
+      "!**/*.bak",
+      "!*.map",
+      "!**/*.map"
+    ],
+    "asar": true,
+    "asarUnpack": [
+      "src/main/bin/media-control.exe",
+      "src/main/bin/media-helper.ps1"
+    ]
+  },
+  "devDependencies": {
+    "electron": "^30.0.0",
+    "electron-builder": "^24.13.3",
+    "electron-reloader": "^1.2.3"
+  },
+  "dependencies": {
+    "@ghostery/adblocker-electron": "^2.14.1",
+    "active-win": "^8.2.1",
+    "chart.js": "^4.5.1",
+    "cross-fetch": "^4.1.0",
+    "dompurify": "^3.4.3",
+    "electron-updater": "^6.8.3",
+    "loudness": "^0.4.2"
+  }
+}

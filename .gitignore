@@ -1,0 +1,63 @@
+# Dependency directories
+node_modules/
+
+# Build artifacts
+dist/
+build/
+out/
+
+# GSD Planning (User requested local-only)
+.planning/
+
+# OS metadata
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# Environment variables
+.env
+.env.local
+.env.example
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+app.log
+
+scripts/*
+!scripts/build-protected.js
+mcp_config.json
+premium feature.md
+
+# Python Virtual Environment
+.venv/
+
+# Local Debug / Diagnostic Files
+debug-status.json
+Roaming_Folders.txt
+
+# Local Claude API Integration
+tools/DND/
+tools/prototypes/
+tools/dt_claude.py
+tools/.claude_session.json
+tools/verify-signature.ps1
+
+# Claude CLI sharing resources (local only in this repo)
+claude/
+requirements.txt
+
+# Private Telemetry Key
+src/main/telemetry-config.json
+
+# Local Docs / Assets to exclude
+docs/ROADMAP.md
+docs/orchestra.md
+assets/logo image.ico
+assets/logo image.png
+assets/logo image 2.ico
+assets/logo image 2.png

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; connect-src 'self' https://discord.com;">
+  <title>Deep Track Controls</title>
+  <link rel="stylesheet" href="overlay.css">
+  <link href="./fonts/inter.css" rel="stylesheet">
+  <link href="./fonts/material-icons.css" rel="stylesheet">
+</head>
+
+<body>
+  <div id="overlay-root" class="collapsed">
+    <button id="bubble-button" class="bubble-button" type="button" aria-label="Open Deep Track controls">
+      <img src="../../assets/logo image 2.png" alt="">
+    </button>
+
+    <section id="control-panel" class="control-panel" aria-label="Deep Track quick controls">
+      <div class="panel-header">
+        <div>
+          <span id="session-mode" class="session-mode">Focus</span>
+          <strong id="session-time">0:00</strong>
+        </div>
+        <button id="collapse-button" class="icon-button" type="button" aria-label="Collapse controls">×</button>
+      </div>
+
+      <div id="track-name" class="track-name">Loading media...</div>
+
+      <div class="media-row">
+        <button class="round-button" type="button" data-media-action="prev" aria-label="Previous track">
+          <span class="material-icons-outlined ctrl-btn" id="prev-track">skip_previous</span>
+        </button>
+
+        <button id="media-play" class="round-button primary" type="button" data-media-action="play"
+          aria-label="Play or pause media">
+          <span class="material-icons-outlined">pause</span>
+        </button>
+
+        <button class="round-button" type="button" data-media-action="next" aria-label="Next track">
+          <span class="material-icons-outlined ctrl-btn" id="next-track">skip_next</span>
+        </button>
+
+      </div>
+
+      <button id="session-toggle" class="session-toggle" type="button">Pause Session</button>
+    </section>
+  </div>
+
+  <script src="overlay.js"></script>
+</body>
+
+</html>
